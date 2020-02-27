@@ -38,11 +38,18 @@
           <button class="btn btn-primary" v-on:click="addNewTodo">Add</button>
         </div>
       </div>
+      <div class="row py-2">
+        <div class="col-2">
+          <button class="btn btn-primary" v-on:click="asyncAdd(10)">{{ dkm }}</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import addition from "./math/sum";
+
 export default {
   name: "App",
   components: {},
@@ -51,7 +58,8 @@ export default {
       name: "Bach",
       tasks: [],
       hideCompleted: false,
-      newItemText: ""
+      newItemText: "",
+      dkm: 0
     };
   },
   computed: {
@@ -74,9 +82,20 @@ export default {
     deleteCompleted() {
       this.tasks = this.tasks.filter(t => !t.done);
       this.storeData();
+    },
+    asyncAdd(values) {
+      return new Promise(callback => {
+        setTimeout(() => {
+          let total = addition(values);
+          console.log(`Async Total: ${total}`);
+          callback(total);
+        }, 500);
+      });
     }
   },
   created() {
+    console.log("hello");
+
     let data = localStorage.getItem("todos");
     if (data != null) {
       this.tasks = JSON.parse(data);
